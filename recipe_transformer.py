@@ -83,5 +83,6 @@ def get_ingredients(soup):
     return ing_list
 
 if __name__ == "__main__":
-    recipe_url = raw_input("Please enter the URL of the recipe:")
-    main(recipe_url)
+    # recipe_url = raw_input("Please enter the URL of the recipe:")
+    test_r1 = 'http://allrecipes.com/recipe/15268/cajun-dirty-rice/?internalSource=staff%20pick&referringId=192&referringContentType=recipe%20hub&clickId=cardslot%205'
+    main(test_r1)
