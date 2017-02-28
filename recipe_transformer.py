@@ -10,13 +10,33 @@ def main(recipeURL):
 
     soup = BeautifulSoup(data, "html.parser")
     ##GET TITLE AND DESCRIPTION
-    title = soup.findAll("h1", { "class" : "recipe-summary__h1" })[0].string
+    [title, descript] = get_title_and_descript(soup)
     print "Title - ", title
-    descript = soup.findAll("div", { "class" : "submitter__description" })[0].contents[0]
-    descript = descript[3:len(descript) - 4]
     print "Description: ", descript
     print " "
     ##GET THE INGREDIENTS
+    ingredients = get_ingredients(soup)
+    for i in ingredients:
+        print "Name:", i['name']
+        print "    Quantity:", i['quant']
+        print "    Preparation:", i['preparation']
+
+    ##GET THE DIRECTIONS
+    directionsHTML = soup.findAll("section", { "class" : "recipe-directions" })
+    # print directionsHTML
+
+    # footnotesHTML = soup.findAll("section", { "class" : "recipe-footnotes" })
+    # print footnotesHTML
+    return 0
+
+def get_title_and_descript(soup):
+    title = soup.findAll("h1", { "class" : "recipe-summary__h1" })[0].string
+    descript = soup.findAll("div", { "class" : "submitter__description" })[0].contents[0]
+    descript = descript[3:len(descript) - 4]
+
+    return [title, descript]
+
+def get_ingredients(soup):
     ingredientsHTML = soup.findAll("li", { "class" : "checkList__line" })
     ingredientsList = []
     for i in range(0, len(ingredientsHTML)):
@@ -58,16 +78,9 @@ def main(recipeURL):
             ing_preparation = ing_value[split_ind_comma + 1 :]
 
         curr_ing = {"name" : ing_name, "quant" : ing_quant, "preparation": ing_preparation, "measurement" : ing_measurement, "description" : ing_descript}
-        print "Name:", ing_name
-        print "    Quantity:", ing_quant
-        print "    Preparation:", ing_preparation
         ing_list.append(curr_ing)
 
-    #directionsHTML = soup.findAll("section", { "class" : "recipe-directions" })
-    #print directionsHTML
-
-    #footnotesHTML = soup.findAll("section", { "class" : "recipe-footnotes" })
-    #print footnotesHTML
+    return ing_list
 
 if __name__ == "__main__":
     recipe_url = raw_input("Please enter the URL of the recipe:")
