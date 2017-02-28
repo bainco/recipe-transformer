@@ -18,7 +18,7 @@ def main():
     ingredientsHTML = soup.findAll("section", { "class" : "recipe-ingredients" })
     print ingredientsHTML
 
-    directionsHTML = soup.findA ll("section", { "class" : "recipe-directions" })
+    directionsHTML = soup.findAll("section", { "class" : "recipe-directions" })
     print directionsHTML
 
     footnotesHTML = soup.findAll("section", { "class" : "recipe-footnotes" })
