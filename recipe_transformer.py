@@ -11,9 +11,11 @@ def main(recipeURL):
     soup = BeautifulSoup(data, "html.parser")
     ##GET TITLE AND DESCRIPTION
     title = soup.findAll("h1", { "class" : "recipe-summary__h1" })[0].string
-    print "Name: ", title
+    print "Title - ", title
     descript = soup.findAll("div", { "class" : "submitter__description" })[0].contents[0]
+    descript = descript[3:len(descript) - 4]
     print "Description: ", descript
+    print " "
     ##GET THE INGREDIENTS
     ingredientsHTML = soup.findAll("li", { "class" : "checkList__line" })
     ingredientsList = []
@@ -23,21 +25,43 @@ def main(recipeURL):
     for i in range(0, len(ingredientsList)):
         final_ing_list.append(ingredientsList[i][0].string)
 
-    types_of_measurement_list = ['teaspoon', 'cup', 'pound', 'dash', 'pinch',  'pint', 'quart', 'gallon', 'oz', 'oz.', 'liter', 'gram', 'ml', 'ounce', 'stick']
+    final_ing_list = final_ing_list[0: len(final_ing_list) - 3]
+    # print "LISTYL", str(final_ing_list)
+    types_of_measurement_list = ['teaspoon', 'cup', 'pound', 'dash', 'pinch',  'pint', 'quart', 'gallon', 'oz', 'oz.', 'liter', 'gram', 'ml', 'ounce', 'stick', 'can']
     ing_list = []
+    print "Ingredients"
     for i in range(0, len(final_ing_list)):
-        split_ing = final_ing_list[0].split()
-        split_ind = 0
+        # print final_ing_list[i]
+        split_ing = final_ing_list[i].split()
+        split_ind_quant_value = 0
+
         for j in range(0, len(split_ing)):
             if any(keyword in split_ing[j] for keyword in types_of_measurement_list):
-                split_ind = j
-        ing_quant = split_ing[0:split_ind + 1]
+                split_ind_quant_value = j
+        ing_quant = split_ing[0:split_ind_quant_value + 1]
         ing_quant = ' '.join(ing_quant)
-        ing_value = split_ing[split_ind + 1:]
-        ing_value = ' '.join(ing_value)
-        ing_list.append([ing_quant, ing_value])
 
-    print "Ingredients List: ", str(ing_list)
+        ing_name = ''
+        ing_quantity = ''
+        ing_measurement = 'None'
+        ing_descript = 'None'
+        ing_preparation = ''
+
+        ing_value = split_ing[split_ind_quant_value + 1:]
+        ing_value = ' '.join(ing_value)
+        split_ind_comma = ing_value.find(',')
+        if split_ind_comma == -1:
+            ing_name = ing_value
+            ing_preparation = 'None'
+        else:
+            ing_name = ing_value[0: split_ind_comma]
+            ing_preparation = ing_value[split_ind_comma + 1 :]
+
+        curr_ing = {"name" : ing_name, "quant" : ing_quant, "preparation": ing_preparation, "measurement" : ing_measurement, "description" : ing_descript}
+        print "Name:", ing_name
+        print "    Quantity:", ing_quant
+        print "    Preparation:", ing_preparation
+        ing_list.append(curr_ing)
 
     #directionsHTML = soup.findAll("section", { "class" : "recipe-directions" })
     #print directionsHTML
