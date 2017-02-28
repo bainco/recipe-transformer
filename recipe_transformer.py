@@ -9,6 +9,7 @@ def main(recipeURL):
     data = r.text
 
     soup = BeautifulSoup(data, "html.parser")
+
     ##GET TITLE AND DESCRIPTION
     [title, descript] = get_title_and_descript(soup)
     print "Title - ", title
