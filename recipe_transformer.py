@@ -16,11 +16,17 @@ def main(recipeURL):
     print "Description: ", descript
     print " "
 
-    ## GET THE NUMBER OF SERVINGS
+    ##GET THE REVIEW SENTIMENT
+    review_sentiment = get_review_sentiment(soup)
+    print round(review_sentiment[0], 1), "percent of users reviewed it positively"
+    print round(review_sentiment[1], 1), "percent of users reviewed it neutrally"
+    print round(review_sentiment[2], 1), "percent of users reviewed it negatively\n"
+
+    ##GET THE NUMBER OF SERVINGS
     num_servings = get_num_servings(soup)
     print "Number of servings: " + num_servings
 
-    ## GET NUTRITION INFO
+    ##GET NUTRITION INFO
     print "Nutritional information per serving:"
     nutrition = soup.findAll("div", { "class" : "recipe-nutrition__form" })[0]
     calories = get_nutrition_info(soup, nutrition, "calories")
@@ -68,6 +74,19 @@ def get_nutrition_info(soup, nutrition, itemprop):
     info_unit = info_header.findAll("li", { "itemprop" : itemprop })[0].contents[1].string
     info_percent = info_header.findAll("li", { "class" : "nutrientLine__item--percent"})[0].string
     return [info, info_unit, info_percent]
+
+def get_review_sentiment(soup):
+    review_header = soup.findAll("section", { "id" : "reviews"})[0].ol
+    total = int(review_header.contents[1].h4.string.split(" ")[0])
+    love = int(review_header.findAll("div", { "data-ratingstars" : "5" })[0].parent["title"].split(" ")[0])
+    like = int(review_header.findAll("div", { "data-ratingstars" : "4" })[0].parent["title"].split(" ")[0])
+    ok = int(review_header.findAll("div", { "data-ratingstars" : "3" })[0].parent["title"].split(" ")[0])
+    noLike = int(review_header.findAll("div", { "data-ratingstars" : "2" })[0].parent["title"].split(" ")[0])
+    cantEat = int(review_header.findAll("div", { "data-ratingstars" : "1" })[0].parent["title"].split(" ")[0])
+    total_positive = love + like
+    total_neutral = ok
+    total_negative = noLike + cantEat
+    return [100*total_positive/float(total), 100*total_neutral/float(total), 100*total_negative/float(total)]
 
 
 def get_ingredients(soup):
