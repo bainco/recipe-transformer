@@ -15,6 +15,27 @@ def main(recipeURL):
     print "Title - ", title
     print "Description: ", descript
     print " "
+
+    ## GET THE NUMBER OF SERVINGS
+    num_servings = get_num_servings(soup)
+    print "Number of servings: " + num_servings
+
+    ## GET NUTRITION INFO
+    print "Nutritional information per serving:"
+    nutrition = soup.findAll("div", { "class" : "recipe-nutrition__form" })[0]
+    calories = get_nutrition_info(soup, nutrition, "calories")
+    print "\tCalories: " + calories[0] + calories[1] + " (" + calories[2] + ")"
+    fat = get_nutrition_info(soup, nutrition, "fatContent")
+    print "\tFat: " + fat[0] + fat[1] + " (" + fat[2] + ")"
+    carbs = get_nutrition_info(soup, nutrition, "carbohydrateContent")
+    print "\tCarbs: " + carbs[0] + carbs[1] + " (" + carbs[2] + ")"
+    protein = get_nutrition_info(soup, nutrition, "proteinContent")
+    print "\tProtein: " + protein[0] + protein[1] + " (" + protein[2] + ")"
+    cholesterol = get_nutrition_info(soup, nutrition, "cholesterolContent")
+    print "\tCholesterol: " + cholesterol[0] + cholesterol[1] + " (" + cholesterol[2] + ")"
+    sodium = get_nutrition_info(soup, nutrition, "sodiumContent")
+    print "\tSodium: " + sodium[0] + sodium[1] + " (" + sodium[2] + ")\n"
+
     ##GET THE INGREDIENTS
     ingredients = get_ingredients(soup)
     for i in ingredients:
@@ -36,6 +57,18 @@ def get_title_and_descript(soup):
     descript = descript[3:len(descript) - 4]
 
     return [title, descript]
+
+def get_num_servings(soup):
+    num_servings = soup.findAll("meta", { "id" : "metaRecipeServings" })[0]['content']
+    return num_servings
+
+def get_nutrition_info(soup, nutrition, itemprop):
+    info_header = nutrition.findAll("li", { "itemprop" : itemprop })[0].parent
+    info = info_header.findAll("li", { "itemprop" : itemprop })[0].contents[0].string
+    info_unit = info_header.findAll("li", { "itemprop" : itemprop })[0].contents[1].string
+    info_percent = info_header.findAll("li", { "class" : "nutrientLine__item--percent"})[0].string
+    return [info, info_unit, info_percent]
+
 
 def get_ingredients(soup):
     ingredientsHTML = soup.findAll("li", { "class" : "checkList__line" })
