@@ -1,6 +1,7 @@
 import sys
 from bs4 import BeautifulSoup
 import requests
+from step import *
 
 def main(recipeURL):
 
@@ -60,10 +61,16 @@ def main(recipeURL):
 
     print "Directions:"
     i = 0
+    processedSteps = []
     for step in steps:
         print "Step", (str(i) + ".")
         print step, "\n"
+        processedSteps.append(processDirection(step, ingredients))
         i += 1
+
+    for thing in processedSteps:
+        print str(thing)
+
     # footnotesHTML = soup.findAll("section", { "class" : "recipe-footnotes" })
     # print footnotesHTML
     return 0
