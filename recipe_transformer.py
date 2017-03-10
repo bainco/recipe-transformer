@@ -17,10 +17,10 @@ def main(recipeURL):
     print " "
 
     ##GET THE REVIEW SENTIMENT
-    review_sentiment = get_review_sentiment(soup)
-    print round(review_sentiment[0], 1), "percent of users reviewed it positively"
-    print round(review_sentiment[1], 1), "percent of users reviewed it neutrally"
-    print round(review_sentiment[2], 1), "percent of users reviewed it negatively\n"
+    #review_sentiment = get_review_sentiment(soup)
+    #print round(review_sentiment[0], 1), "percent of users reviewed it positively"
+    #print round(review_sentiment[1], 1), "percent of users reviewed it neutrally"
+    #print round(review_sentiment[2], 1), "percent of users reviewed it negatively\n"
 
     ##GET THE NUMBER OF SERVINGS
     num_servings = get_num_servings(soup)
@@ -49,13 +49,43 @@ def main(recipeURL):
         print "    Quantity:", i['quant']
         print "    Preparation:", i['preparation']
 
-    ##GET THE DIRECTIONS
-    directionsHTML = soup.findAll("section", { "class" : "recipe-directions" })
-    # print directionsHTML
 
+    steps, prepTime, cookTime, readyTime = get_directions(soup)
+
+    print ""
+    print "Prep Time:", prepTime, "minutes"
+    print "Cook Time:", cookTime, "minutes"
+    print "Ready Time:", readyTime, "minutes"
+    print ""
+
+    print "Directions:"
+    i = 0
+    for step in steps:
+        print "Step", (str(i) + ".")
+        print step, "\n"
+        i += 1
     # footnotesHTML = soup.findAll("section", { "class" : "recipe-footnotes" })
     # print footnotesHTML
     return 0
+
+def get_directions(theSoup):
+    ##GET THE DIRECTIONS
+    times = theSoup.findAll("span", { "class": "prepTime__item--time" })
+    prepTime = times[0].contents[0]
+    cookTime = times[1].contents[0]
+    if len(times) > 3:
+        readyTime = (int(times[2].contents[0])*60) + int(times[3].contents[0])
+    else:
+        readyTime = int(times[2].contents[0])
+
+    stepsHTML = theSoup.findAll("span", { "class" : "recipe-directions__list--item" })
+    steps = []
+    for span in stepsHTML:
+        if span.contents:
+            steps.append(span.contents[0])
+
+    return steps, prepTime, cookTime, readyTime
+
 
 def get_title_and_descript(soup):
     title = soup.findAll("h1", { "class" : "recipe-summary__h1" })[0].string
