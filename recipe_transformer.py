@@ -2,6 +2,7 @@ import sys
 from bs4 import BeautifulSoup
 import requests
 from step import *
+from ingredients import *
 
 types_of_measurement_list = ['teaspoon', 'cup', 'pound', 'dash', 'pinch',  'pint', 'quart', 'gallon', ' oz', 'liter', 'gram', 'ml', 'ounce', 'stick', 'can', 'jar', 'lb', 'package']
 
@@ -72,8 +73,8 @@ def main(recipeURL):
         processedSteps.append(processDirection(step, ingredients))
         i += 1
 
-    for thing in processedSteps:
-        print str(thing)
+    # for thing in processedSteps:
+    #     print str(thing)
 
     # footnotesHTML = soup.findAll("section", { "class" : "recipe-footnotes" })
     # print footnotesHTML
@@ -128,90 +129,6 @@ def get_review_sentiment(soup):
     total_neutral = ok
     total_negative = noLike + cantEat
     return [100*total_positive/float(total), 100*total_neutral/float(total), 100*total_negative/float(total)]
-
-
-def get_ingredients(soup):
-    ingredientsHTML = soup.findAll("li", { "class" : "checkList__line" })
-    ingredientsList = []
-    for i in range(0, len(ingredientsHTML)):
-        ingredientsList.append(ingredientsHTML[i].findAll("span", { "class" : "recipe-ingred_txt"}))
-    final_ing_list = []
-    for i in range(0, len(ingredientsList)):
-        final_ing_list.append(ingredientsList[i][0].string)
-
-    final_ing_list = final_ing_list[0: len(final_ing_list) - 3]
-    ing_list = []
-    print "Ingredients"
-    for i in range(0, len(final_ing_list)):
-        split_ing = final_ing_list[i].split()
-        split_ind_quant_value = 0
-
-        ing_name = 'None'
-        ing_quantity = 'None'
-        ing_measurement = 'None'
-        ing_descript = 'None'
-        ing_preparation = 'None'
-        #split each ingredient into quant(amount), and value(everything else)
-        for j in range(0, len(split_ing)):
-            if any(keyword in split_ing[j] for keyword in types_of_measurement_list):
-                split_ind_quant_value = j
-
-        ing_quant = split_ing[0:split_ind_quant_value + 1]
-        ing_value = split_ing[split_ind_quant_value + 1:]
-        ing_quant = ' '.join(ing_quant)
-        ing_value = ' '.join(ing_value)
-
-        [ing_quantity, ing_measurement] = get_qm_from_quant(ing_quant)
-        [ing_name, ing_descript, ing_preparation] = split_ing_value(ing_value)
-
-        curr_ing = {"name" : ing_name, "quant" : ing_quantity, "preparation": ing_preparation, "measurement" : ing_measurement, "description" : ing_descript}
-        ing_list.append(curr_ing)
-
-    return ing_list
-
-def get_qm_from_quant(quant):
-    ing_quantity = 'None'
-    ing_measurement = 'None'
-    split_q = quant.split()
-    # print "SPLIT Q", str(quant)
-    q_ind = 0
-    paren_start = -1
-    paren_end = -1
-    paren_start_types = ['(', '{', '[']
-    paren_end_types = [')', '}', ']']
-    for j in range(0, len(split_q)):
-        if any(keyword in split_q[j] for keyword in paren_start_types):
-            paren_start = j
-        if any(keyword in split_q[j] for keyword in paren_end_types):
-            paren_end = j
-        if any(keyword in split_q[j] for keyword in types_of_measurement_list):
-            q_ind = j
-    if q_ind == 0:
-        ing_quantity = " "
-        ing_measurement = " "
-        return [ing_quantity, ing_measurement]
-    if paren_start != -1:
-        ing_quantity = ' '.join(quant[0:paren_start])
-        ing_measurement = quant[paren_start:]
-    else:
-        print "SPLIT Q", str(split_q), ", J:", str(q_ind)
-        ing_quantity = ' '.join(split_q[0:q_ind])
-        ing_measurement = ' '.join(split_q[q_ind:])
-    return [ing_quantity, ing_measurement]
-
-def split_ing_value(ing_value):
-    ing_name = 'None'
-    ing_descript = 'None'
-    ing_preparation = 'None'
-
-    split_ind_comma = ing_value.find(',')
-    if split_ind_comma == -1:
-        ing_name = ing_value
-        ing_preparation = 'None'
-    else:
-        ing_name = ing_value[0: split_ind_comma + 1]
-        ing_preparation = ing_value[split_ind_comma + 1 :]
-    return [ing_name, ing_descript, ing_preparation]
 
 if __name__ == "__main__":
     # recipe_url = raw_input("Please enter the URL of the recipe:")
