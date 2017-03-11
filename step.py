@@ -1,7 +1,7 @@
 import re
 import nltk
 from nltk.chunk.regexp import *
-TOOLS = ["pan", "skillet", "oven", "baking pan", "pot", "slotted spoon", "spoon", "dish", "knife", "collander", "baking sheet", "bowl"]
+TOOLS = ["pan", "skillet", "oven", "baking pan", "pot", "slotted spoon", "spoon", "dish", "knife", "collander", "baking sheet", "bowl", "whisk", "grater"]
 PRIMARY_METHODS = ['saute', 'mix', 'heat', 'bake', 'whip', 'roast', 'grill', 'boil', 'broil', 'poach', 'fry', 'preheat']
 CUTTING_KEYWORDS = ['cut', 'chop', 'slice', 'dice', 'julienne']
 
@@ -13,7 +13,7 @@ CUTTING_KEYWORDS = ['cut', 'chop', 'slice', 'dice', 'julienne']
 #          VP: {<V> <NP|PP>*}
 #          ''')
 
-def processDirection(text, ingredients, tool_list):
+def processDirection(text, ingredients, tool_list, pm, om):
     sentences = text.split(".")
 
     stepIngredients = set()
@@ -46,6 +46,10 @@ def processDirection(text, ingredients, tool_list):
         stepIngredientsStr = stepIngredientsStr + i + ", "
     stepIngredientsStr = stepIngredientsStr[:len(stepIngredientsStr) - 2]
     [p_methods, o_methods] = split_methods(all_methods)
+    if p_methods != "":
+        pm = pm + ", " + p_methods
+    if o_methods != "":
+        om = om + ", " + o_methods
     stepTools = list(stepTools)
     stepToolsStr = ""
     for s in stepTools:
@@ -53,7 +57,7 @@ def processDirection(text, ingredients, tool_list):
     stepToolsStr = stepToolsStr[:len(stepToolsStr) - 2]
     tool_list = tool_list + ", " + stepToolsStr
 
-    return [Step(text, stepIngredientsStr, stepTimeStr, stepToolsStr, p_methods, o_methods), tool_list]
+    return [Step(text, stepIngredientsStr, stepTimeStr, stepToolsStr, p_methods, o_methods), tool_list, pm, om]
 
 def get_methods(text, all_methods, stepTools):
     text = text.strip().lower()
@@ -63,12 +67,11 @@ def get_methods(text, all_methods, stepTools):
         if t in TOOLS:
             stepTools.add(t)
     text_pos_tagged = nltk.pos_tag(text_tokens)
-    # parsed_tree = regex_p.parse(text_pos_tagged, trace=True)
 
     for i in range(0, len(text_pos_tagged)):
             curr_token = text_pos_tagged[i]
             if ('VB' in curr_token[1]) and (curr_token[1] != 'VBD') and (curr_token[1] != 'VBN'):
-                if len(curr_token[0]) > 3:
+                if len(curr_token[0]) > 2:
                     all_methods.append(curr_token[0])
     
     for m in all_methods:

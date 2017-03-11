@@ -68,17 +68,21 @@ def main(recipeURL):
     i = 0
     processedSteps = []
     tool_list = ""
+    primary_methods = ""
+    other_methods = ""
     for step in steps:
         # print "Step", (str(i) + ".")
         # print step, "\n"
-        [processed_step, tool_list] = processDirection(step, ingredients, tool_list) 
+        [processed_step, tool_list, primary_methods, other_methods] = processDirection(step, ingredients, tool_list, primary_methods, other_methods) 
         processedSteps.append(processed_step)
         i += 1
     
     print "Tools:", str(tool_list[2:]), "\n"
+    print "Primary Methods:", primary_methods[2:]
+    print "Other Methods:", other_methods[2:], "\n"
     print "Directions"
-    for thing in processedSteps:
-        print str(thing)
+    for pstep in processedSteps:
+        print str(pstep)
 
     # footnotesHTML = soup.findAll("section", { "class" : "recipe-footnotes" })
     # print footnotesHTML
