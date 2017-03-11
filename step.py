@@ -13,7 +13,7 @@ CUTTING_KEYWORDS = ['cut', 'chop', 'slice', 'dice', 'julienne']
 #          VP: {<V> <NP|PP>*}
 #          ''')
 
-def processDirection(text, ingredients, tool_list, pm, om):
+def processDirection(text, number, ingredients, tool_list, pm, om):
     sentences = text.split(".")
 
     stepIngredients = set()
@@ -57,7 +57,7 @@ def processDirection(text, ingredients, tool_list, pm, om):
     stepToolsStr = stepToolsStr[:len(stepToolsStr) - 2]
     tool_list = tool_list + ", " + stepToolsStr
 
-    return [Step(text, stepIngredientsStr, stepTimeStr, stepToolsStr, p_methods, o_methods), tool_list, pm, om]
+    return [Step(text, number, stepIngredientsStr, stepTimeStr, stepToolsStr, p_methods, o_methods), tool_list, pm, om]
 
 def get_methods(text, all_methods, stepTools):
     text = text.strip().lower()
@@ -99,7 +99,7 @@ def split_methods(methods):
 class Step:
     def __str__(self):
         result = ""
-        result += "Step: " + str(self.text) + '\n'
+        result += "Step " + str(self.number) + ": " + str(self.text) + '\n'
         result += "    Ingredients: " + str(self.ingredients) + "\n"
         result += "    Time: " + str(self.time) + "\n"
         result += "    Tools: " + str(self.tools) + "\n"
@@ -107,8 +107,9 @@ class Step:
         result += "    Other methods: " + str(self.other_methods) + "\n"
         return result
 
-    def __init__(self, text, ingredients, time, tools, method, other_methods):
+    def __init__(self, text, number, ingredients, time, tools, method, other_methods):
         self.text = text
+        self.number = number + 1
         self.ingredients = ingredients
         self.time = time
         self.tools = tools

@@ -70,10 +70,11 @@ def main(recipeURL):
     tool_list = ""
     primary_methods = ""
     other_methods = ""
-    for step in steps:
+    # for step in steps:
+    for i in range(0, len(steps)):
         # print "Step", (str(i) + ".")
         # print step, "\n"
-        [processed_step, tool_list, primary_methods, other_methods] = processDirection(step, ingredients, tool_list, primary_methods, other_methods) 
+        [processed_step, tool_list, primary_methods, other_methods] = processDirection(steps[i], i, ingredients, tool_list, primary_methods, other_methods) 
         processedSteps.append(processed_step)
         i += 1
     
@@ -142,4 +143,4 @@ if __name__ == "__main__":
     # recipe_url = raw_input("Please enter the URL of the recipe:")
     test_r1 = 'http://allrecipes.com/recipe/15268/cajun-dirty-rice/?internalSource=staff%20pick&referringId=192&referringContentType=recipe%20hub&clickId=cardslot%205'
     test_r2 = 'http://allrecipes.com/recipe/87845/manicotti-italian-casserole/?internalSource=popular&referringContentType=home%20page&clickId=cardslot%207'
-    main(test_r2)
+    main(test_r1)
