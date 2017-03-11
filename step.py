@@ -1,22 +1,31 @@
 import re
 import nltk
-TOOLS = ["pan", "skillet", ]
-PRIMARY_METHODS = ['saute', 'mix', 'heat', 'bake', 'whip', 'roast', 'grill', 'boil', 'broil', 'poach', 'fry']
+from nltk.chunk.regexp import *
+TOOLS = ["pan", "skillet", "oven", "baking pan", "pot", "slotted spoon", "spoon", "dish", "knife", "collander", "baking sheet", "bowl"]
+PRIMARY_METHODS = ['saute', 'mix', 'heat', 'bake', 'whip', 'roast', 'grill', 'boil', 'broil', 'poach', 'fry', 'preheat']
+CUTTING_KEYWORDS = ['cut', 'chop', 'slice', 'dice', 'julienne']
 
+# regex_p = RegexpParser('''
+#          NP: {<DT>? <JJ>* <NN>*}
+#          P: {<IN>}
+#          V: {<V.*>}
+#          PP: {<P> <NP>}
+#          VP: {<V> <NP|PP>*}
+#          ''')
 
-
-def processDirection(text, ingredients):
+def processDirection(text, ingredients, tool_list):
     sentences = text.split(".")
 
     stepIngredients = set()
     stepTime = 0
-    [p_methods, o_methods] = get_methods(text)
+    all_methods = []
+    stepTools = set()
     for sentence in sentences:
         substep = sentence.strip().lower()
         for ingredient in ingredients:
             for word in ingredient['name'].split(" "):
                 if word in substep:
-                    stepIngredients.add(ingredient['name'])
+                    stepIngredients.add(ingredient['name'][:len(ingredient['name']) - 1])
 
 
         match = re.search('(\d+) minutes', substep)
@@ -27,42 +36,72 @@ def processDirection(text, ingredients):
         if match != None:
             stepTime += int(match.group(1)) * 60
 
-    stepTools = []
+        [all_methods, stepTools] = get_methods(substep, all_methods, stepTools)
+
     stepMethod = ""
     stepTimeStr = str(stepTime) + " minutes"
+    stepIngredients = list(stepIngredients)[1:]
+    stepIngredientsStr = ""
+    for i in stepIngredients:
+        stepIngredientsStr = stepIngredientsStr + i + ", "
+    stepIngredientsStr = stepIngredientsStr[:len(stepIngredientsStr) - 2]
+    [p_methods, o_methods] = split_methods(all_methods)
+    stepTools = list(stepTools)
+    stepToolsStr = ""
+    for s in stepTools:
+        stepToolsStr += s + ", "
+    stepToolsStr = stepToolsStr[:len(stepToolsStr) - 2]
+    tool_list = tool_list + ", " + stepToolsStr
 
-    return Step(text, stepIngredients, stepTimeStr, stepTools, p_methods, o_methods)
+    return [Step(text, stepIngredientsStr, stepTimeStr, stepToolsStr, p_methods, o_methods), tool_list]
 
-def get_methods(text):
+def get_methods(text, all_methods, stepTools):
     text = text.strip().lower()
     text = "I " + text
     text_tokens = nltk.word_tokenize(text)
+    for t in text_tokens:
+        if t in TOOLS:
+            stepTools.add(t)
     text_pos_tagged = nltk.pos_tag(text_tokens)
-    print "TEXT:", text
-    print "TAGGED:", str(text_pos_tagged)
+    # parsed_tree = regex_p.parse(text_pos_tagged, trace=True)
 
-    all_methods = []
     for i in range(0, len(text_pos_tagged)):
             curr_token = text_pos_tagged[i]
-            if "VB" in curr_token[1]:
-                all_methods.append(curr_token[0])
+            if ('VB' in curr_token[1]) and (curr_token[1] != 'VBD') and (curr_token[1] != 'VBN'):
+                if len(curr_token[0]) > 3:
+                    all_methods.append(curr_token[0])
+    
+    for m in all_methods:
+        if 'drain' in m:
+            stepTools.add('collander')
+        if any(ck in m for ck in CUTTING_KEYWORDS):
+            stepTools.add('knife')
 
-    print "ALL METHODS:", str(all_methods)
+    return [all_methods, stepTools]
 
-    return [" ", " "]
+def split_methods(methods):
+    p_methods = "" #primary cooking methods
+    o_methods = "" #secondary cooking methods
+
+    for m in methods:
+        if m in PRIMARY_METHODS:
+            p_methods = p_methods + m + ", "
+        else:
+            o_methods = o_methods + m + ", "
+
+    return [p_methods[:len(p_methods) - 2], o_methods[:len(o_methods) - 2]]
         # CHECK FOR INGREDIENTS BY COMPARING TO INGREDIENTS LISTYL
-
 
 
 class Step:
     def __str__(self):
         result = ""
-        result += "text: " + str(self.text) + '\n'
-        result += "ingredients: " + str(self.ingredients) + "\n"
-        result += "time: " + str(self.time) + "\n"
-        result += "tools: " + str(self.tools) + "\n"
-        result += "Cooking method: " + str(self.method) + "\n"
-        result += "Other methods: " + str(self.other_methods) + "\n"
+        result += "Step: " + str(self.text) + '\n'
+        result += "    Ingredients: " + str(self.ingredients) + "\n"
+        result += "    Time: " + str(self.time) + "\n"
+        result += "    Tools: " + str(self.tools) + "\n"
+        result += "    Cooking method: " + str(self.method) + "\n"
+        result += "    Other methods: " + str(self.other_methods) + "\n"
         return result
 
     def __init__(self, text, ingredients, time, tools, method, other_methods):
