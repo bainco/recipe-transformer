@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 from step import *
 from ingredients import *
+from fractions import Fraction
 
 types_of_measurement_list = ['teaspoon', 'cup', 'pound', 'dash', 'pinch',  'pint', 'quart', 'gallon', ' oz', 'liter', 'gram', 'ml', 'ounce', 'stick', 'can', 'jar', 'lb', 'package']
 
@@ -143,7 +144,7 @@ def transform_servings(ingredients, orig_num_servings, is_printing):
     new_num_servings = raw_input('How many servings would you like this recipe to serve? The original serves ' + orig_num_servings + '.\n(Please enter a single number)\n')
     for i in ingredients:
         if is_number(i['quant'].split(' ')[0]):
-            num = float(i['quant'].split(' ')[0])
+            num = float(sum(Fraction(s) for s in i['quant'].split()))
             new_num = num * (float(new_num_servings)/float(orig_num_servings))
             i['quant'] = str(new_num)
         if is_printing:
