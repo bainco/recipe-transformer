@@ -62,17 +62,22 @@ def processDirection(text, number, ingredients, tool_list, pm, om):
 def get_methods(text, all_methods, stepTools):
     text = text.strip().lower()
     text = "I " + text
+    # print "TEXT: ", text
     text_tokens = nltk.word_tokenize(text)
     for t in text_tokens:
         if t in TOOLS:
             stepTools.add(t)
     text_pos_tagged = nltk.pos_tag(text_tokens)
 
+    # print "T_TOKENS: ", text_pos_tagged
+
     for i in range(0, len(text_pos_tagged)):
             curr_token = text_pos_tagged[i]
             if ('VB' in curr_token[1]) and (curr_token[1] != 'VBD') and (curr_token[1] != 'VBN'):
                 if len(curr_token[0]) > 2:
                     all_methods.append(curr_token[0])
+            if curr_token[0] == 'brown' or curr_token[0] == 'drain':
+                all_methods.append(curr_token[0])
     
     for m in all_methods:
         if 'drain' in m:
@@ -103,8 +108,8 @@ class Step:
         result += "    Ingredients: " + str(self.ingredients) + "\n"
         result += "    Time: " + str(self.time) + "\n"
         result += "    Tools: " + str(self.tools) + "\n"
-        result += "    Cooking method: " + str(self.method) + "\n"
-        result += "    Other methods: " + str(self.other_methods) + "\n"
+        result += "    Cooking method(s): " + str(self.method) + "\n"
+        # result += "    Other methods: " + str(self.other_methods) + "\n"
         return result
 
     def __init__(self, text, number, ingredients, time, tools, method, other_methods):
@@ -113,5 +118,14 @@ class Step:
         self.ingredients = ingredients
         self.time = time
         self.tools = tools
-        self.method = method
-        self.other_methods = other_methods
+        # self.method = method + other_methods
+        self.method = ""
+        if method != "":
+            self.method = method
+        if other_methods != "":
+            if self.method == "":
+                self.method = other_methods
+            else:
+                self.method = self.method + ", " + other_methods
+
+        # self.other_methods = other_methods
