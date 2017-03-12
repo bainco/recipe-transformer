@@ -172,6 +172,26 @@ def get_ingredients(soup):
 
     return ing_list
 
+def transform_servings(ingredients, orig_num_servings):
+    new_num_servings = raw_input('How many servings would you like this recipe to serve? The original serves ' + orig_num_servings + '.\n(Please enter a single number)\n')
+    for i in ingredients:
+        print "Name:", i['name']
+        if is_number(i['quant'].split(' ')[0]):
+            num = float(i['quant'].split(' ')[0])
+            new_num = num * (float(new_num_servings)/float(orig_num_servings))
+            print "    Quantity:", str(new_num) + ' ' + ' '.join(i['quant'].split(' ')[1:])
+        else:
+            print "    Quantity:", i['quant']
+        print "    Preparation:", i['preparation']
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
 if __name__ == "__main__":
     # recipe_url = raw_input("Please enter the URL of the recipe:")
     test_r1 = 'http://allrecipes.com/recipe/15268/cajun-dirty-rice/?internalSource=staff%20pick&referringId=192&referringContentType=recipe%20hub&clickId=cardslot%205'
