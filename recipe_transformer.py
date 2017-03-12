@@ -2,6 +2,9 @@ import sys
 from bs4 import BeautifulSoup
 import requests
 from step import *
+from ingredients import *
+
+types_of_measurement_list = ['teaspoon', 'cup', 'pound', 'dash', 'pinch',  'pint', 'quart', 'gallon', ' oz', 'liter', 'gram', 'ml', 'ounce', 'stick', 'can', 'jar', 'lb', 'package']
 
 def main(recipeURL):
 
@@ -18,10 +21,10 @@ def main(recipeURL):
     print " "
 
     ##GET THE REVIEW SENTIMENT
-    #review_sentiment = get_review_sentiment(soup)
-    #print round(review_sentiment[0], 1), "percent of users reviewed it positively"
-    #print round(review_sentiment[1], 1), "percent of users reviewed it neutrally"
-    #print round(review_sentiment[2], 1), "percent of users reviewed it negatively\n"
+    review_sentiment = get_review_sentiment(soup)
+    print round(review_sentiment[0], 1), "percent of users reviewed it positively"
+    print round(review_sentiment[1], 1), "percent of users reviewed it neutrally"
+    print round(review_sentiment[2], 1), "percent of users reviewed it negatively\n"
 
     ##GET THE NUMBER OF SERVINGS
     num_servings = get_num_servings(soup)
@@ -48,7 +51,9 @@ def main(recipeURL):
     for i in ingredients:
         print "Name:", i['name']
         print "    Quantity:", i['quant']
+        print "    Measurement:", i['measurement']
         print "    Preparation:", i['preparation']
+        print "    Description:", i['description']
 
 
     steps, prepTime, cookTime, readyTime = get_directions(soup)
@@ -59,17 +64,26 @@ def main(recipeURL):
     print "Ready Time:", readyTime, "minutes"
     print ""
 
-    print "Directions:"
+    # print "Directions:"
     i = 0
     processedSteps = []
-    for step in steps:
-        print "Step", (str(i) + ".")
-        print step, "\n"
-        processedSteps.append(processDirection(step, ingredients))
+    tool_list = ""
+    primary_methods = ""
+    other_methods = ""
+    # for step in steps:
+    for i in range(0, len(steps)):
+        # print "Step", (str(i) + ".")
+        # print step, "\n"
+        [processed_step, tool_list, primary_methods, other_methods] = processDirection(steps[i], i, ingredients, tool_list, primary_methods, other_methods)
+        processedSteps.append(processed_step)
         i += 1
 
-    for thing in processedSteps:
-        print str(thing)
+    print "Tools:", str(tool_list[2:]), "\n"
+    print "Primary Methods:", primary_methods[2:]
+    print "Other Methods:", other_methods[2:], "\n"
+    print "Directions"
+    for pstep in processedSteps:
+        print str(pstep)
 
     # footnotesHTML = soup.findAll("section", { "class" : "recipe-footnotes" })
     # print footnotesHTML
@@ -125,64 +139,20 @@ def get_review_sentiment(soup):
     total_negative = noLike + cantEat
     return [100*total_positive/float(total), 100*total_neutral/float(total), 100*total_negative/float(total)]
 
-
-def get_ingredients(soup):
-    ingredientsHTML = soup.findAll("li", { "class" : "checkList__line" })
-    ingredientsList = []
-    for i in range(0, len(ingredientsHTML)):
-        ingredientsList.append(ingredientsHTML[i].findAll("span", { "class" : "recipe-ingred_txt"}))
-    final_ing_list = []
-    for i in range(0, len(ingredientsList)):
-        final_ing_list.append(ingredientsList[i][0].string)
-
-    final_ing_list = final_ing_list[0: len(final_ing_list) - 3]
-    # print "LISTYL", str(final_ing_list)
-    types_of_measurement_list = ['teaspoon', 'cup', 'pound', 'dash', 'pinch',  'pint', 'quart', 'gallon', 'oz', 'oz.', 'liter', 'gram', 'ml', 'ounce', 'stick', 'can']
-    ing_list = []
-    print "Ingredients"
-    for i in range(0, len(final_ing_list)):
-        # print final_ing_list[i]
-        split_ing = final_ing_list[i].split()
-        split_ind_quant_value = 0
-
-        for j in range(0, len(split_ing)):
-            if any(keyword in split_ing[j] for keyword in types_of_measurement_list):
-                split_ind_quant_value = j
-        ing_quant = split_ing[0:split_ind_quant_value + 1]
-        ing_quant = ' '.join(ing_quant)
-
-        ing_name = ''
-        ing_quantity = ''
-        ing_measurement = 'None'
-        ing_descript = 'None'
-        ing_preparation = ''
-
-        ing_value = split_ing[split_ind_quant_value + 1:]
-        ing_value = ' '.join(ing_value)
-        split_ind_comma = ing_value.find(',')
-        if split_ind_comma == -1:
-            ing_name = ing_value
-            ing_preparation = 'None'
-        else:
-            ing_name = ing_value[0: split_ind_comma]
-            ing_preparation = ing_value[split_ind_comma + 1 :]
-
-        curr_ing = {"name" : ing_name, "quant" : ing_quant, "preparation": ing_preparation, "measurement" : ing_measurement, "description" : ing_descript}
-        ing_list.append(curr_ing)
-
-    return ing_list
-
-def transform_servings(ingredients, orig_num_servings):
+def transform_servings(ingredients, orig_num_servings, is_printing):
     new_num_servings = raw_input('How many servings would you like this recipe to serve? The original serves ' + orig_num_servings + '.\n(Please enter a single number)\n')
     for i in ingredients:
-        print "Name:", i['name']
         if is_number(i['quant'].split(' ')[0]):
             num = float(i['quant'].split(' ')[0])
             new_num = num * (float(new_num_servings)/float(orig_num_servings))
-            print "    Quantity:", str(new_num) + ' ' + ' '.join(i['quant'].split(' ')[1:])
-        else:
+            i['quant'] = str(new_num)
+        if is_printing:
+            print "Name:", i['name']
             print "    Quantity:", i['quant']
-        print "    Preparation:", i['preparation']
+            print "    Measurement:", i['measurement']
+            print "    Preparation:", i['preparation']
+            print "    Description:", i['description']
+    return ingredients
 
 def is_number(s):
     try:
@@ -195,4 +165,5 @@ def is_number(s):
 if __name__ == "__main__":
     # recipe_url = raw_input("Please enter the URL of the recipe:")
     test_r1 = 'http://allrecipes.com/recipe/15268/cajun-dirty-rice/?internalSource=staff%20pick&referringId=192&referringContentType=recipe%20hub&clickId=cardslot%205'
-    main(test_r1)
+    test_r2 = 'http://allrecipes.com/recipe/87845/manicotti-italian-casserole/?internalSource=popular&referringContentType=home%20page&clickId=cardslot%207'
+    main(test_r2)
