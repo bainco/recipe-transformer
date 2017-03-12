@@ -85,6 +85,30 @@ def main(recipeURL):
     for pstep in processedSteps:
         print str(pstep)
 
+    transform_bool= raw_input("Would you like to transform this recipe (Yes/No): ")
+    if transform_bool == "Y" or transform_bool == "Yes" or transform_bool == "yes" or transform_bool == "YEs":  
+        print "Transform Options:"
+        print "\t 1: Make this recipe vegetarian"
+        print "\t 2: Make this recipe healthy"
+        print "\t 3: Change the scale of this recipe"
+        print "\t Done: You are done making changes to this recipe"
+        transform_str = raw_input("Please number the number of the transform you want or type 'Done' to exit: ")
+
+        if transform_str == '1':
+            print "Beginning to switch " + title + "to a vegetarian version."
+            #CALL THE VEGGY TRANSFORM FUNCTIOn
+        elif transform_str == '2':
+            print "Switching " + title + " to a healthier version."
+            #CALL HEALTHY TRANSFORM FUNCTION
+        elif transform_str == '3':
+            print "Changing the scale of " + title
+        elif transform_str == 'Done':
+            print "Great - Hope you enjoy this recipe!" 
+            #CALL SCALE TRANSFORM
+        else:
+            print "Incorrect command - exiting the recipe transform. Enjoy the recipe!"
+
+
     # footnotesHTML = soup.findAll("section", { "class" : "recipe-footnotes" })
     # print footnotesHTML
     return 0
