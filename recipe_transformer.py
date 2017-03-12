@@ -21,10 +21,10 @@ def main(recipeURL):
     print " "
 
     ##GET THE REVIEW SENTIMENT
-    #review_sentiment = get_review_sentiment(soup)
-    #print round(review_sentiment[0], 1), "percent of users reviewed it positively"
-    #print round(review_sentiment[1], 1), "percent of users reviewed it neutrally"
-    #print round(review_sentiment[2], 1), "percent of users reviewed it negatively\n"
+    review_sentiment = get_review_sentiment(soup)
+    print round(review_sentiment[0], 1), "percent of users reviewed it positively"
+    print round(review_sentiment[1], 1), "percent of users reviewed it neutrally"
+    print round(review_sentiment[2], 1), "percent of users reviewed it negatively\n"
 
     ##GET THE NUMBER OF SERVINGS
     num_servings = get_num_servings(soup)
@@ -143,4 +143,4 @@ if __name__ == "__main__":
     # recipe_url = raw_input("Please enter the URL of the recipe:")
     test_r1 = 'http://allrecipes.com/recipe/15268/cajun-dirty-rice/?internalSource=staff%20pick&referringId=192&referringContentType=recipe%20hub&clickId=cardslot%205'
     test_r2 = 'http://allrecipes.com/recipe/87845/manicotti-italian-casserole/?internalSource=popular&referringContentType=home%20page&clickId=cardslot%207'
-    main(test_r1)
+    main(test_r2)

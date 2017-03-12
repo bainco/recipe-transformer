@@ -1,7 +1,7 @@
 import re
 import nltk
 from nltk.chunk.regexp import *
-TOOLS = ["pan", "skillet", "oven", "baking pan", "pot", "slotted spoon", "spoon", "dish", "knife", "collander", "baking sheet", "bowl", "whisk", "grater"]
+TOOLS = ["pan", "skillet", "oven", "baking pan", "pot", "slotted spoon", "spoon", "dish", "knife", "collander", "baking sheet", "bowl", "whisk", "grater", "tongs", "peeler", "turner", "scoop", "masher", "can opener", "spatula", "tenderizer", "ladle", "measuring cup", "stove", "microwave", "fork"]
 PRIMARY_METHODS = ['saute', 'mix', 'heat', 'bake', 'whip', 'roast', 'grill', 'boil', 'broil', 'poach', 'fry', 'preheat']
 CUTTING_KEYWORDS = ['cut', 'chop', 'slice', 'dice', 'julienne']
 
@@ -62,14 +62,13 @@ def processDirection(text, number, ingredients, tool_list, pm, om):
 def get_methods(text, all_methods, stepTools):
     text = text.strip().lower()
     text = "I " + text
-    # print "TEXT: ", text
-    text_tokens = nltk.word_tokenize(text)
-    for t in text_tokens:
-        if t in TOOLS:
-            stepTools.add(t)
-    text_pos_tagged = nltk.pos_tag(text_tokens)
 
-    # print "T_TOKENS: ", text_pos_tagged
+    for t in TOOLS:
+        if t in text:
+            stepTools.add(t)
+
+    text_tokens = nltk.word_tokenize(text)
+    text_pos_tagged = nltk.pos_tag(text_tokens)
 
     for i in range(0, len(text_pos_tagged)):
             curr_token = text_pos_tagged[i]
@@ -84,6 +83,10 @@ def get_methods(text, all_methods, stepTools):
             stepTools.add('collander')
         if any(ck in m for ck in CUTTING_KEYWORDS):
             stepTools.add('knife')
+        if "brown" in m or "boil" in m:
+            stepTools.add('stove')
+        if "stir" in m or "mix" in m or "combine" in m:
+            stepTools.add("spatula")
 
     return [all_methods, stepTools]
 
