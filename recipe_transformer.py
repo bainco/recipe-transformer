@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 from step import *
 from ingredients import *
+from fractions import Fraction
 
 types_of_measurement_list = ['teaspoon', 'cup', 'pound', 'dash', 'pinch',  'pint', 'quart', 'gallon', ' oz', 'liter', 'gram', 'ml', 'ounce', 'stick', 'can', 'jar', 'lb', 'package']
 
@@ -74,10 +75,10 @@ def main(recipeURL):
     for i in range(0, len(steps)):
         # print "Step", (str(i) + ".")
         # print step, "\n"
-        [processed_step, tool_list, primary_methods, other_methods] = processDirection(steps[i], i, ingredients, tool_list, primary_methods, other_methods) 
+        [processed_step, tool_list, primary_methods, other_methods] = processDirection(steps[i], i, ingredients, tool_list, primary_methods, other_methods)
         processedSteps.append(processed_step)
         i += 1
-    
+
     print "Tools:", str(tool_list[2:]), "\n"
     print "Primary Methods:", primary_methods[2:]
     print "Other Methods:", other_methods[2:], "\n"
@@ -162,6 +163,29 @@ def get_review_sentiment(soup):
     total_neutral = ok
     total_negative = noLike + cantEat
     return [100*total_positive/float(total), 100*total_neutral/float(total), 100*total_negative/float(total)]
+
+def transform_servings(ingredients, orig_num_servings, is_printing):
+    new_num_servings = raw_input('How many servings would you like this recipe to serve? The original serves ' + orig_num_servings + '.\n(Please enter a single number)\n')
+    for i in ingredients:
+        if is_number(i['quant'].split(' ')[0]):
+            num = float(sum(Fraction(s) for s in i['quant'].split()))
+            new_num = num * (float(new_num_servings)/float(orig_num_servings))
+            i['quant'] = str(new_num)
+        if is_printing:
+            print "Name:", i['name']
+            print "    Quantity:", i['quant']
+            print "    Measurement:", i['measurement']
+            print "    Preparation:", i['preparation']
+            print "    Description:", i['description']
+    return ingredients
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
 
 if __name__ == "__main__":
     # recipe_url = raw_input("Please enter the URL of the recipe:")

@@ -70,7 +70,6 @@ def classify(title, description):
 	for word in title_and_description.split():
 		if word in categories_list:
 			type_of_cuisine.append(word)
-	print type_of_cuisine
 	return type_of_cuisine
 
-classify("Baked Buffalo Chicken Dip","You can't keep showing up at these Super Bowl parties with a bag of chips every year. So, if you're ready to go from snack scrub to appetizer all-star, then give this great baked dip a try.")
+# classify("Baked Buffalo Chicken Dip","You can't keep showing up at these Super Bowl parties with a bag of chips every year. So, if you're ready to go from snack scrub to appetizer all-star, then give this great baked dip a try.")
