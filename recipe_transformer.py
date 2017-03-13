@@ -5,7 +5,7 @@ from step import *
 from ingredients import *
 from fractions import Fraction
 from healthy_transform import *
-from vegetarian import *
+from vegetarian_transform import *
 
 
 def parse_recipe(recipeURL):
@@ -94,10 +94,18 @@ def parse_recipe(recipeURL):
 
         if transform_str == '1':
             print "Beginning to switch " + title + "to a vegetarian version."
-            vegan_transform(ingredients, processedSteps)
+            (new_ingredients, new_processedSteps) = vegan_transform(ingredients, processedSteps)
+            checkIfSure = raw_input("Is this the change you wanted to make? Enter 'Yes' or 'No'")
+            if checkIfSure == 'Yes':
+                ingredients = new_ingredients
+                processedSteps = new_processedSteps
         elif transform_str == '2':
             print "Switching " + title + " to a healthier version."
-            (ingredients, processedSteps) = transform_healthy(ingredients, processedSteps, primary_methods)
+            (new_ingredients, new_processedSteps) = transform_healthy(ingredients, processedSteps, primary_methods)
+            checkIfSure = raw_input("Is this the change you wanted to make? Enter 'Yes' or 'No'")
+            if checkIfSure == 'Yes':
+                ingredients = new_ingredients
+                processedSteps = new_processedSteps
             for i in ingredients:
                 print "Name:", i['name']
                 print "    Quantity:", i['quant']
@@ -109,7 +117,11 @@ def parse_recipe(recipeURL):
                 print str(pstep)
         elif transform_str == '3':
             print "Changing the scale of " + title
-            ingredients = transform_servings(ingredients, num_servings, True)
+            new_ingredients = transform_servings(ingredients, num_servings, True)
+            checkIfSure = raw_input("Is this the change you wanted to make? Enter 'Yes' or 'No'")
+            if checkIfSure == 'Yes':
+                ingredients = new_ingredients
+
         elif transform_str == 'Done':
             print "Great - Hope you enjoy this recipe!"
             #CALL SCALE TRANSFORM
