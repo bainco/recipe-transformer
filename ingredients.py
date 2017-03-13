@@ -110,11 +110,15 @@ def split_name(nd):
 
 def validate_quant(some_quant):
     if "/" in some_quant:
+        
         position = some_quant.index("/")
         numerator = some_quant[position - 1]
         denominator = some_quant[position + 1]
         fraction = float(numerator) / float(denominator)
-        base = float(some_quant[:position - 1].strip())
+        print "FLOAT:", some_quant[:position - 1].strip()
+        base = 0.0
+        if some_quant[:position - 1] != '':
+            base = float(some_quant[:position - 1].strip())
         return str(base + fraction)
         
     else:

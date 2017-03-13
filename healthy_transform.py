@@ -76,7 +76,7 @@ def transform_healthy(old_ingredients, old_directions, primary_methods):
 
     return (ingredients, directions)
 
-def updateDirections(directions, old_ingredient, new_ingredient, remove):
+def updateDirections(directions, old_ingredient, new_ingredient, remove = True):
     for i in range(len(directions)):
         for j in range(len(directions[i].ingredients)):
             if directions[i].ingredients[j] == old_ingredient:

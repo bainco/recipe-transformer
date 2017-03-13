@@ -12,6 +12,9 @@ from copy import deepcopy
 def parse_recipe(recipeURL):
     #comment out
     recipeURL = 'http://allrecipes.com/recipe/87845/manicotti-italian-casserole/?internalSource=popular&referringContentType=home%20page&clickId=cardslot%207'
+    recipeURL = 'http://allrecipes.com/recipe/158587/smoky-four-cheese-macaroni-bake/'
+    recipeURL = raw_input("Please enter the URL of the recipe:")
+    
     r  = requests.get(recipeURL)
 
     data = r.text
@@ -189,7 +192,8 @@ def transform_servings(old_ingredients, orig_num_servings, is_printing):
     new_num_servings = raw_input('How many servings would you like this recipe to serve? The original serves ' + orig_num_servings + '.\n(Please enter a single number)\n')
     for i in ingredients:
         if is_number(i['quant'].split(' ')[0]):
-            num = float(sum(Fraction(s) for s in i['quant'].split()))
+            # num = float(sum(Fraction(s) for s in i['quant'].split()))
+            num = float(i['quant'])
             new_num = num * (float(new_num_servings)/float(orig_num_servings))
             i['quant'] = str(new_num)
         if is_printing:
