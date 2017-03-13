@@ -115,6 +115,7 @@ def validate_quant(some_quant):
         denominator = some_quant[position + 1]
         fraction = float(numerator) / float(denominator)
         base = float(some_quant[:position - 1].strip())
-        return base + fraction
+        return str(base + fraction)
+        
     else:
         return some_quant
