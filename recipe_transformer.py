@@ -6,10 +6,7 @@ from ingredients import *
 from fractions import Fraction
 from healthy_transform import *
 from vegetarian_transform import *
-<<<<<<< HEAD
 
-=======
->>>>>>> ae7a6649b86ac6f5783effa9d5b9975776c74bb7
 
 def parse_recipe(recipeURL):
     #comment out
@@ -105,10 +102,6 @@ def parse_recipe(recipeURL):
         elif transform_str == '2':
             print "Switching " + title + " to a healthier version."
             (new_ingredients, new_processedSteps) = transform_healthy(ingredients, processedSteps, primary_methods)
-            checkIfSure = raw_input("Is this the change you wanted to make? Enter 'Yes' or 'No'")
-            if checkIfSure == 'Yes':
-                ingredients = new_ingredients
-                processedSteps = new_processedSteps
             for i in ingredients:
                 print "Name:", i['name']
                 print "    Quantity:", i['quant']
@@ -116,8 +109,12 @@ def parse_recipe(recipeURL):
                 print "    Preparation:", i['preparation']
                 print "    Description:", i['description']
             print "Directions"
-            for pstep in new_steps:
+            for pstep in new_processedSteps:
                 print str(pstep)
+            checkIfSure = raw_input("Is this the change you wanted to make? Enter 'Yes' or 'No'")
+            if checkIfSure == 'Yes':
+                ingredients = new_ingredients
+                processedSteps = new_processedSteps
         elif transform_str == '3':
             print "Changing the scale of " + title
             new_ingredients = transform_servings(ingredients, num_servings, True)
