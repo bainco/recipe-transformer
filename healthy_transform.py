@@ -5,7 +5,7 @@ BAKE_FAT_REPLACE = ['butter', 'lard', 'shortening']
 PASTA_TYPES = ['spaghetti', 'linguini', 'macaroni', 'farfalle', 'penne', 'orzo', 'ravioli', 'fettucine',
     'rigatoni', 'tortellini', 'rotini', 'lasagna', 'manacotti']
 
-def healhty_transform(ingredients, directions):
+def transform_healthy(ingredients, directions, primary_methods):
     #TODO: HOW DO WE DEAL WITH UPDATING DIRECTIONS?
     if "bake" in primary_methods:
         replacement_amount = []
@@ -18,7 +18,7 @@ def healhty_transform(ingredients, directions):
                     directions = updateDirections(directions, item, "applesauce")
 
             # If sugar, replace 1/2 with 1tsp of allspice and 1tsp of Vanilla Extract
-            if 'sugar' in ingredient[i]['name']:
+            if 'sugar' in ingredients[i]['name']:
                 ingredients[i]['quant'] = float(ingredients[i]['quant']) / 2
                 ingredients.append({"name" : 'allspice', "quant" : 2, "preparation": "", "measurement" : "teaspoon", "description" : ""})
                 ingredients.append({"name" : 'vanilla extract', "quant" : 1, "preparation": "", "measurement" : "teaspoon", "description" : ""})
@@ -58,7 +58,7 @@ def healhty_transform(ingredients, directions):
             ingredients[i]['name'] = 'skim milk'
 
         # trim fat from meats
-        if any(ck in ingredient[i]['name'] for ck in MEATS):
+        if any(ck in ingredients[i]['name'] for ck in MEATS):
             ingredients[i]['name'] += " (with fat trimmed)"
 
         # skinless for all chicken
