@@ -6,7 +6,7 @@ PASTA_TYPES = ['spaghetti', 'linguini', 'macaroni', 'farfalle', 'penne', 'orzo',
     'rigatoni', 'tortellini', 'rotini', 'lasagna', 'manicotti']
 
 def transform_healthy(ingredients, directions, primary_methods):
-    #TODO: HOW DO WE DEAL WITH UPDATING DIRECTIONS?
+
     if "bake" in primary_methods:
         replacement_amount = []
         for i in range(len(ingredients)):
