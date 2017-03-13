@@ -5,6 +5,7 @@ from step import *
 from ingredients import *
 from fractions import Fraction
 from healthy_transform import *
+from vegetarian import *
 
 
 def parse_recipe(recipeURL):
@@ -93,7 +94,7 @@ def parse_recipe(recipeURL):
 
         if transform_str == '1':
             print "Beginning to switch " + title + "to a vegetarian version."
-            #CALL THE VEGGY TRANSFORM FUNCTIOn
+            vegan_transform(ingredients, processedSteps)
         elif transform_str == '2':
             print "Switching " + title + " to a healthier version."
             (ingredients, processedSteps) = transform_healthy(ingredients, processedSteps, primary_methods)

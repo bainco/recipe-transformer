@@ -34,7 +34,9 @@ FORBIDDEN = ['beef stock',
              'mayonnaise',
              'gelatin',
              'hamburger',
-             'chocolate']
+             'chocolate',
+             'pepperoni',
+             'sausage']
 
 REPLACEMENT = {'milk' : 'soymilk',
                'cheese' : 'vegan cheese',
@@ -67,7 +69,9 @@ REPLACEMENT = {'milk' : 'soymilk',
                'lobster' : 'tofu',
                'clam' : 'tofu',
                'hamburger' : 'veggie burger',
-               'chicken nuggets' : 'soy chicken nuggets'}
+               'chicken nuggets' : 'soy chicken nuggets',
+               'pepperoni' : 'tofu',
+               'sausage' : 'tofu'}
 
 def vegan_transform(ingredients, directions):
     for i in range(len(ingredients)):
