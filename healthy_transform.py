@@ -26,10 +26,11 @@ def transform_healthy(ingredients, directions, primary_methods):
                 directions = updateDirections(directions, "sugar", "allspice")
 
         # process applesauce replacements
-        actual_amount = 0
-        for quant, measurement in replacement_amount:
-            actual_amount += standardize_measurement(quant, measurement)
-        ingredients.append({"name" : 'applesauce', "quant" : actual_amount, "preparation": "", "measurement" : "oz", "description" : ""})
+        if replacement_amount:
+            actual_amount = 0
+            for quant, measurement in replacement_amount:
+                actual_amount += standardize_measurement(quant, measurement)
+                ingredients.append({"name" : 'applesauce', "quant" : actual_amount, "preparation": "", "measurement" : "oz", "description" : ""})
 
     # Remove most salt (or 1/3) if NOT BAKING
     else:

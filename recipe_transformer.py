@@ -8,7 +8,7 @@ from healthy_transform import *
 
 
 def parse_recipe(recipeURL):
-    #comment out 
+    #comment out
     recipeURL = 'http://allrecipes.com/recipe/87845/manicotti-italian-casserole/?internalSource=popular&referringContentType=home%20page&clickId=cardslot%207'
     r  = requests.get(recipeURL)
 
@@ -97,6 +97,12 @@ def parse_recipe(recipeURL):
         elif transform_str == '2':
             print "Switching " + title + " to a healthier version."
             (ingredients, processedSteps) = transform_healthy(ingredients, processedSteps, primary_methods)
+            for i in ingredients:
+                print "Name:", i['name']
+                print "    Quantity:", i['quant']
+                print "    Measurement:", i['measurement']
+                print "    Preparation:", i['preparation']
+                print "    Description:", i['description']
             print "Directions"
             for pstep in processedSteps:
                 print str(pstep)
