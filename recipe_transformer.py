@@ -5,7 +5,7 @@ from step import *
 from ingredients import *
 from fractions import Fraction
 from healthy_transform import *
-from vegetarian import *
+from vegetarian_transform import *
 
 
 def parse_recipe(recipeURL):

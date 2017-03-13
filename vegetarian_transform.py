@@ -1,5 +1,6 @@
 from measure_standardizer import *
 from healthy_transform import updateDirections
+from copy import deepcopy
 
 FORBIDDEN = ['beef stock',
              'chicken stock',
@@ -73,7 +74,9 @@ REPLACEMENT = {'milk' : 'soymilk',
                'pepperoni' : 'tofu',
                'sausage' : 'tofu'}
 
-def vegan_transform(ingredients, directions):
+def vegan_transform(old_ingredients, old_directions):
+    ingredients = deepcopy(old_ingredients)
+    directions = deepcopy(old_directions)
     for i in range(len(ingredients)):
         for bad in FORBIDDEN:
             if bad in ingredients[i]['name']:
