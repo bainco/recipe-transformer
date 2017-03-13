@@ -108,6 +108,7 @@ def parse_recipe(recipeURL):
                 print str(pstep)
         elif transform_str == '3':
             print "Changing the scale of " + title
+            ingredients = transform_servings(ingredients, num_servings, True)
         elif transform_str == 'Done':
             print "Great - Hope you enjoy this recipe!"
             #CALL SCALE TRANSFORM
