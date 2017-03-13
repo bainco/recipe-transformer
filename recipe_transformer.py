@@ -196,4 +196,5 @@ if __name__ == "__main__":
     # recipe_url = raw_input("Please enter the URL of the recipe:")
     test_r1 = 'http://allrecipes.com/recipe/15268/cajun-dirty-rice/?internalSource=staff%20pick&referringId=192&referringContentType=recipe%20hub&clickId=cardslot%205'
     test_r2 = 'http://allrecipes.com/recipe/87845/manicotti-italian-casserole/?internalSource=popular&referringContentType=home%20page&clickId=cardslot%207'
-    parse_recipe(test_r2)
+    test_healthy = 'http://allrecipes.com/recipe/222582/baked-spaghetti/?internalSource=hub%20recipe&referringContentType=search%20results&clickId=cardslot%202'
+    parse_recipe(test_healthy)
