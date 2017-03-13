@@ -7,7 +7,6 @@ from fractions import Fraction
 from healthy_transform import *
 from vegetarian import *
 
-
 def parse_recipe(recipeURL):
     #comment out
     recipeURL = 'http://allrecipes.com/recipe/87845/manicotti-italian-casserole/?internalSource=popular&referringContentType=home%20page&clickId=cardslot%207'
@@ -97,15 +96,15 @@ def parse_recipe(recipeURL):
             vegan_transform(ingredients, processedSteps)
         elif transform_str == '2':
             print "Switching " + title + " to a healthier version."
-            (ingredients, processedSteps) = transform_healthy(ingredients, processedSteps, primary_methods)
-            for i in ingredients:
+            (new_ingredients, new_steps) = transform_healthy(ingredients, processedSteps, primary_methods)
+            for i in new_ingredients:
                 print "Name:", i['name']
                 print "    Quantity:", i['quant']
                 print "    Measurement:", i['measurement']
                 print "    Preparation:", i['preparation']
                 print "    Description:", i['description']
             print "Directions"
-            for pstep in processedSteps:
+            for pstep in new_steps:
                 print str(pstep)
         elif transform_str == '3':
             print "Changing the scale of " + title

@@ -1,11 +1,14 @@
 from measure_standardizer import *
+from copy import deepcopy
 
 MEATS = ['pork', 'chicken', 'beef', 'turkey', 'steak']
 BAKE_FAT_REPLACE = ['butter', 'lard', 'shortening']
 PASTA_TYPES = ['spaghetti', 'linguini', 'macaroni', 'farfalle', 'penne', 'orzo', 'ravioli', 'fettucine',
     'rigatoni', 'tortellini', 'rotini', 'lasagna', 'manicotti']
 
-def transform_healthy(ingredients, directions, primary_methods):
+def transform_healthy(old_ingredients, old_directions, primary_methods):
+    ingredients = deepcopy(old_ingredients)
+    directions = deepcopy(old_directions)
 
     if "bake" in primary_methods:
         replacement_amount = []
