@@ -6,6 +6,7 @@ from ingredients import *
 from fractions import Fraction
 from healthy_transform import *
 from vegetarian_transform import *
+from copy import deepcopy
 
 
 def parse_recipe(recipeURL):
@@ -183,7 +184,8 @@ def get_review_sentiment(soup):
     total_negative = noLike + cantEat
     return [100*total_positive/float(total), 100*total_neutral/float(total), 100*total_negative/float(total)]
 
-def transform_servings(ingredients, orig_num_servings, is_printing):
+def transform_servings(old_ingredients, orig_num_servings, is_printing):
+    ingredients = deepcopy(old_ingredients)
     new_num_servings = raw_input('How many servings would you like this recipe to serve? The original serves ' + orig_num_servings + '.\n(Please enter a single number)\n')
     for i in ingredients:
         if is_number(i['quant'].split(' ')[0]):
