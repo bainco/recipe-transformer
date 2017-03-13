@@ -108,9 +108,11 @@ def split_name(nd):
             description = description + nd_tagged[i][0] + " "
     return [name, description]
 
-def validate_quant(some_quant):
+def validate_quant(in_quant):
+    some_quant = in_quant.strip()
+
     if "/" in some_quant:
-        
+
         position = some_quant.index("/")
         numerator = some_quant[position - 1]
         denominator = some_quant[position + 1]
@@ -120,6 +122,6 @@ def validate_quant(some_quant):
         if some_quant[:position - 1] != '':
             base = float(some_quant[:position - 1].strip())
         return str(base + fraction)
-        
+
     else:
         return some_quant
