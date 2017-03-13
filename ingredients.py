@@ -39,6 +39,8 @@ def get_ingredients(soup):
         [ing_quantity, ing_measurement] = get_qm_from_quant(ing_quant)
         [ing_name, ing_descript, ing_preparation] = split_ing_value(ing_value)
 
+        ing_quantity = validate_quant(ing_quantity)
+
         curr_ing = {"name" : ing_name, "quant" : ing_quantity, "preparation": ing_preparation, "measurement" : ing_measurement, "description" : ing_descript}
         ing_list.append(curr_ing)
 
@@ -105,3 +107,15 @@ def split_name(nd):
         else:
             description = description + nd_tagged[i][0] + " "
     return [name, description]
+
+def validate_quant(some_quant):
+    if "/" in some_quant:
+        position = some_quant.index("/")
+        numerator = some_quant[position - 1]
+        denominator = some_quant[position + 1]
+        fraction = float(numerator) / float(denominator)
+        base = float(some_quant[:position - 1].strip())
+        return str(base + fraction)
+        
+    else:
+        return some_quant

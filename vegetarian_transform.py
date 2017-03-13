@@ -1,4 +1,5 @@
 from measure_standardizer import *
+from healthy_transform import updateDirections
 
 FORBIDDEN = ['beef stock',
              'chicken stock',
@@ -68,12 +69,14 @@ REPLACEMENT = {'milk' : 'soymilk',
                'hamburger' : 'veggie burger',
                'chicken nuggets' : 'soy chicken nuggets'}
 
-def vegan_transform(ingredients):
+def vegan_transform(ingredients, directions):
     for i in range(len(ingredients)):
         for bad in FORBIDDEN:
             if bad in ingredients[i]['name']:
                 if bad not in REPLACEMENT.keys():
+                    directions = updateDirections(directions, ingredients[i]['name'], "(No suitable replacement) OMIT " + ingredients[i]['name'], True)
                     ingredients[i]['name'] = "(No suitable replacement) OMIT " + ingredients[i]['name']
                 else:
+                    directions = updateDirections(directions, ingredients[i]['name'], REPLACEMENT[bad], True)
                     ingredients[i]['name'] = REPLACEMENT[bad]
-    return ingredients
+    return (ingredients,directions)

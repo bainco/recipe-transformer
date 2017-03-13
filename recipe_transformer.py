@@ -4,10 +4,11 @@ import requests
 from step import *
 from ingredients import *
 from fractions import Fraction
+from healthy_transform import *
 
 
 def parse_recipe(recipeURL):
-    #comment out 
+    #comment out
     recipeURL = 'http://allrecipes.com/recipe/87845/manicotti-italian-casserole/?internalSource=popular&referringContentType=home%20page&clickId=cardslot%207'
     r  = requests.get(recipeURL)
 
@@ -95,12 +96,19 @@ def parse_recipe(recipeURL):
             #CALL THE VEGGY TRANSFORM FUNCTIOn
         elif transform_str == '2':
             print "Switching " + title + " to a healthier version."
-            (ingredients, processedSteps) = healthy_transform(ingredients, processedSteps)
+            (ingredients, processedSteps) = transform_healthy(ingredients, processedSteps, primary_methods)
+            for i in ingredients:
+                print "Name:", i['name']
+                print "    Quantity:", i['quant']
+                print "    Measurement:", i['measurement']
+                print "    Preparation:", i['preparation']
+                print "    Description:", i['description']
             print "Directions"
             for pstep in processedSteps:
                 print str(pstep)
         elif transform_str == '3':
             print "Changing the scale of " + title
+            ingredients = transform_servings(ingredients, num_servings, True)
         elif transform_str == 'Done':
             print "Great - Hope you enjoy this recipe!"
             #CALL SCALE TRANSFORM
@@ -184,9 +192,9 @@ def is_number(s):
     except ValueError:
         return False
 
-
 if __name__ == "__main__":
     # recipe_url = raw_input("Please enter the URL of the recipe:")
     test_r1 = 'http://allrecipes.com/recipe/15268/cajun-dirty-rice/?internalSource=staff%20pick&referringId=192&referringContentType=recipe%20hub&clickId=cardslot%205'
     test_r2 = 'http://allrecipes.com/recipe/87845/manicotti-italian-casserole/?internalSource=popular&referringContentType=home%20page&clickId=cardslot%207'
-    parse_recipe(test_r2)
+    test_healthy = 'http://allrecipes.com/recipe/222582/baked-spaghetti/?internalSource=hub%20recipe&referringContentType=search%20results&clickId=cardslot%202'
+    parse_recipe(test_healthy)

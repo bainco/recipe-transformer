@@ -3,10 +3,10 @@ from measure_standardizer import *
 MEATS = ['pork', 'chicken', 'beef', 'turkey', 'steak']
 BAKE_FAT_REPLACE = ['butter', 'lard', 'shortening']
 PASTA_TYPES = ['spaghetti', 'linguini', 'macaroni', 'farfalle', 'penne', 'orzo', 'ravioli', 'fettucine',
-    'rigatoni', 'tortellini', 'rotini', 'lasagna', 'manacotti']
+    'rigatoni', 'tortellini', 'rotini', 'lasagna', 'manicotti']
 
-def healhty_transform(ingredients, directions):
-    #TODO: HOW DO WE DEAL WITH UPDATING DIRECTIONS?
+def transform_healthy(ingredients, directions, primary_methods):
+
     if "bake" in primary_methods:
         replacement_amount = []
         for i in range(len(ingredients)):
@@ -18,18 +18,19 @@ def healhty_transform(ingredients, directions):
                     directions = updateDirections(directions, item, "applesauce")
 
             # If sugar, replace 1/2 with 1tsp of allspice and 1tsp of Vanilla Extract
-            if 'sugar' in ingredient[i]['name']:
+            if 'sugar' in ingredients[i]['name']:
                 ingredients[i]['quant'] = float(ingredients[i]['quant']) / 2
                 ingredients.append({"name" : 'allspice', "quant" : 2, "preparation": "", "measurement" : "teaspoon", "description" : ""})
                 ingredients.append({"name" : 'vanilla extract', "quant" : 1, "preparation": "", "measurement" : "teaspoon", "description" : ""})
-                directions = updateDirections(directions, "sugar", "allspice")
-                directions = updateDirections(directions, "sugar", "allspice")
+                directions = updateDirections(directions, "sugar", "allspice", False)
+                directions = updateDirections(directions, "sugar", "allspice", False)
 
         # process applesauce replacements
-        actual_amount = 0
-        for quant, measurement in replacement_amount:
-            actual_amount += standardize_measurement(quant, measurement)
-        ingredients.append({"name" : 'applesauce', "quant" : actual_amount, "preparation": "", "measurement" : "oz", "description" : ""})
+        if replacement_amount:
+            actual_amount = 0
+            for quant, measurement in replacement_amount:
+                actual_amount += standardize_measurement(quant, measurement)
+                ingredients.append({"name" : 'applesauce', "quant" : actual_amount, "preparation": "", "measurement" : "oz", "description" : ""})
 
     # Remove most salt (or 1/3) if NOT BAKING
     else:
@@ -39,8 +40,8 @@ def healhty_transform(ingredients, directions):
 
     for i in range(len(ingredients)):
         # replace pasta with whole-wheat pasta
-        if ingredients[i]['name'] in PASTA_TYPES:
-            updateDirections(directions, ingredients[i]['name'], "whole-wheat " + ingredients[i]['name'])
+        if 'pasta' in ingredients[i]['name']:
+            directions = updateDirections(directions, ingredients[i]['name'], "whole-wheat " + ingredients[i]['name'], True)
             ingredients[i]['name'] = "whole-wheat " + ingredients[i]['name']
 
         # halve any uses of cheese
@@ -49,16 +50,16 @@ def healhty_transform(ingredients, directions):
 
         # Replace rice with brown rice
         if ('rice' in ingredients[i]['name']) and ('brown' not in ingredients[i]['name']):
-            directions = updateDirections(directions, ingredients[i]['name'], "whole-wheat " + ingredients[i]['name'])
+            directions = updateDirections(directions, ingredients[i]['name'], "whole-wheat " + ingredients[i]['name'], True)
             ingredients[i]['name'] = 'brown rice'
 
         # Replace milk with fat-free
         if ('milk' in ingredients[i]['name']) and ('skim' not in ingredients[i]['name']):
-            directions = updateDirections(directions, ingredients[i]['name'], "skim milk")
+            directions = updateDirections(directions, ingredients[i]['name'], "skim milk", True)
             ingredients[i]['name'] = 'skim milk'
 
         # trim fat from meats
-        if any(ck in ingredient[i]['name'] for ck in MEATS):
+        if any(ck in ingredients[i]['name'] for ck in MEATS):
             ingredients[i]['name'] += " (with fat trimmed)"
 
         # skinless for all chicken
@@ -69,13 +70,13 @@ def healhty_transform(ingredients, directions):
 
 def updateDirections(directions, old_ingredient, new_ingredient, remove):
     for i in range(len(directions)):
-        for j in range(len(directions[i].step.ingredients)):
-            if directions[i].step.ingredients[j] == old_ingredient:
-                directions[i].step.ingredients.add(new_ingredient)
+        for j in range(len(directions[i].ingredients)):
+            if directions[i].ingredients[j] == old_ingredient:
+                directions[i].ingredients.add(new_ingredient)
                 if remove:
-                    directions[i].step.ingredients.remove(directions[i].step.ingredients[j])
-                    directions[i].step.text.replace(old_ingredient, new_ingredient)
+                    directions[i].ingredients.remove(directions[i].step.ingredients[j])
+                    directions[i].text.replace(old_ingredient, new_ingredient)
                 else:
-                    directions[i].step.text.replace(old_ingredient, (old_ingredient + " and " + new_ingredient))
+                    directions[i].text.replace(old_ingredient, (old_ingredient + " and " + new_ingredient))
 
     return directions
