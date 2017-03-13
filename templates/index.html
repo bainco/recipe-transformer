@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Recipe Transformer</title>
+  </head>
+
+  <body>
+    <div class="header">
+      Recipe Transformer
+      <link href="{{ url_for('static', filename='recipe_dash.css')}}" rel="stylesheet">
+    </div>
+    {% if recipe_url %}
+      <div class="contentContainer" id="contentContainer">
+        <table>
+          <tr>
+            <td>
+              <div class="titleContainer">
+                {{title}}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="descriptContainer">
+                {{description}}
+              </div>
+            </td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <td>
+              <div class="ingHeader">
+                Timing
+              </div>
+              Ready In: {{readyTime}}, (Preparation Time: {{prepTime}}, Cooking Time: {{cookTime}})
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ingredientsContainer">
+                <div class="ingHeader">
+                 Ingredients
+                </div>
+                <div class="ingContentCont">
+                  {% for ing in ingredients%}
+                    <div class="singleIngCont">
+                      <div class="ingName">
+                        {{ing['name']}}
+                      </div>
+                      <div class="ingDescriptor">
+                        Quantity: {{ing['quant']}}
+                      </div>
+                      <div class="ingDescriptor">
+                        Measurement: {{ing['measurement']}}
+                      </div>
+                      <div class="ingDescriptor">
+                        Preparation: {{ing['preparation']}}
+                      </div>
+                      <div class="ingDescriptor">
+                        Description: {{ing['description']}}
+                      </div>
+                    </div>
+                    {% endfor %}
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="toolsContainer">
+                <div class="toolsHeader">
+                  Tools
+                </div>
+                <ul>
+                  {% for tool in tool_list %}
+                    <li>{{ tool }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    {% else %}
+    <div class="contentSearch" id="contentSearch">
+      <table>
+        <tr>
+          <td>
+            <textarea class="textURL" id="recipeURLtext" rows="5" cols="80" placeholder="Please enter the url of the recipe you want to parse"></textarea>
+          </td>
+          <td>
+            <div class="textFieldButton" onclick="parseURL()">
+              Go!
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    {% endif %}
+    <script src="{{ url_for('static', filename='recipe_dash.js')}}"> </script>
+  </body>
+</html>

@@ -5,10 +5,10 @@ from step import *
 from ingredients import *
 from fractions import Fraction
 
-types_of_measurement_list = ['teaspoon', 'cup', 'pound', 'dash', 'pinch',  'pint', 'quart', 'gallon', ' oz', 'liter', 'gram', 'ml', 'ounce', 'stick', 'can', 'jar', 'lb', 'package']
 
-def main(recipeURL):
-
+def parse_recipe(recipeURL):
+    #comment out 
+    recipeURL = 'http://allrecipes.com/recipe/87845/manicotti-italian-casserole/?internalSource=popular&referringContentType=home%20page&clickId=cardslot%207'
     r  = requests.get(recipeURL)
 
     data = r.text
@@ -56,7 +56,7 @@ def main(recipeURL):
         print "    Preparation:", i['preparation']
         print "    Description:", i['description']
 
-
+    # GET THE DIRECTIONS
     steps, prepTime, cookTime, readyTime = get_directions(soup)
 
     print ""
@@ -65,19 +65,14 @@ def main(recipeURL):
     print "Ready Time:", readyTime, "minutes"
     print ""
 
-    # print "Directions:"
-    i = 0
     processedSteps = []
     tool_list = ""
     primary_methods = ""
     other_methods = ""
     # for step in steps:
     for i in range(0, len(steps)):
-        # print "Step", (str(i) + ".")
-        # print step, "\n"
         [processed_step, tool_list, primary_methods, other_methods] = processDirection(steps[i], i, ingredients, tool_list, primary_methods, other_methods)
         processedSteps.append(processed_step)
-        i += 1
 
     print "Tools:", str(tool_list[2:]), "\n"
     print "Primary Methods:", primary_methods[2:]
@@ -87,7 +82,7 @@ def main(recipeURL):
         print str(pstep)
 
     transform_bool= raw_input("Would you like to transform this recipe (Yes/No): ")
-    if transform_bool == "Y" or transform_bool == "Yes" or transform_bool == "yes" or transform_bool == "YEs":  
+    if transform_bool == "Y" or transform_bool == "Yes" or transform_bool == "yes" or transform_bool == "YEs":
         print "Transform Options:"
         print "\t 1: Make this recipe vegetarian"
         print "\t 2: Make this recipe healthy"
@@ -104,7 +99,7 @@ def main(recipeURL):
         elif transform_str == '3':
             print "Changing the scale of " + title
         elif transform_str == 'Done':
-            print "Great - Hope you enjoy this recipe!" 
+            print "Great - Hope you enjoy this recipe!"
             #CALL SCALE TRANSFORM
         else:
             print "Incorrect command - exiting the recipe transform. Enjoy the recipe!"
@@ -112,7 +107,7 @@ def main(recipeURL):
 
     # footnotesHTML = soup.findAll("section", { "class" : "recipe-footnotes" })
     # print footnotesHTML
-    return 0
+    return [title, descript, ingredients, prepTime, cookTime, readyTime, tool_list[2:], primary_methods[2:], other_methods[2:], processedSteps]
 
 def get_directions(theSoup):
     ##GET THE DIRECTIONS
@@ -191,4 +186,4 @@ if __name__ == "__main__":
     # recipe_url = raw_input("Please enter the URL of the recipe:")
     test_r1 = 'http://allrecipes.com/recipe/15268/cajun-dirty-rice/?internalSource=staff%20pick&referringId=192&referringContentType=recipe%20hub&clickId=cardslot%205'
     test_r2 = 'http://allrecipes.com/recipe/87845/manicotti-italian-casserole/?internalSource=popular&referringContentType=home%20page&clickId=cardslot%207'
-    main(test_r2)
+    parse_recipe(test_r2)

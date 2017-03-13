@@ -98,8 +98,9 @@ def split_name(nd):
     # print "NAME DESCRIPT:", str(nd_tagged)
     name = ""
     description = ""
+    print "TAGGED: ", str(nd_tagged)
     for i in range(2, len(nd_tagged) - 1):
-        if nd_tagged[i][1] == "NN":
+        if "NN" in nd_tagged[i][1]:
             name = name + nd_tagged[i][0] + " "
         else:
             description = description + nd_tagged[i][0] + " "

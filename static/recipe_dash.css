@@ -1,0 +1,119 @@
+/* recipe transformer */
+
+body{
+  margin: 0;
+  padding: 0:
+  display: flex;
+  font-family: sans-serif;
+}
+
+.header{
+  height: 60px;
+  width: 1200px;
+  background-color: #2196F3;
+
+  font-size: 24px;
+  padding-left: 20px;
+  line-height: 60px;
+  color: white;
+  font-weight: 400;
+}
+
+.contentSearch{
+  height: 820px;
+  width: 1200px;
+  background-color: #e7e7e7;
+  padding-top: 300px;
+  /* padding-left: 400px; */
+}
+
+.textFieldButton{
+  height: 50px;
+  width: 100px;
+  background-color: #004c5c;
+  border-radius: 25px;
+
+  color: white;
+  text-align: center;
+  line-height: 50px;
+}
+
+.titleContainer{
+  height: 60px;
+  text-align: center;
+  line-height: 60px;
+  font-size: 24px;
+  width: 1000px;
+}
+
+.descriptContainer{
+  height: 80px;
+  font-size: 16px;
+  width: 900px;
+  padding-left: 50px;
+  text-align: center;
+}
+
+tr{
+  /* width: 1000px; */
+  /* padding-left: 100px */
+}
+
+.contentContainer{
+  /* width: 1200px; */
+  background-color: #e7e7e7;
+}
+
+.ingContentCont{
+  width: 520px;
+}
+
+.ingredientsContainer{
+  width:520px;
+}
+
+.ingHeader{
+  font-size: 18px;
+  height: 40px;
+  background-color: #f37e21;
+  line-height: 40px;
+  padding-left: 10px;
+}
+
+
+.ingName{
+  font-size: 18px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.ingDescriptor{
+  font-size: 12px;
+  margin-left: 10px;
+}
+
+.singleIngCont{
+  background-color: #ffffff;
+  width: 500px;
+  height: 100px;
+  margin-top: 5px;
+  margin-left: 20px;
+}
+
+.toolsContainer{
+  width : 400px;
+  margin-left: 25px;
+  margin-top: 10px;
+  background-color: #ffffff;
+}
+
+.toolsHeader{
+  color: #f37e21;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+
+
+
+
