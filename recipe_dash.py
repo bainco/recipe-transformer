@@ -9,7 +9,9 @@ def hello():
     [title, descript, ingredients, prepTime, cookTime, readyTime, tool_list, primary_methods, other_methods, processedSteps] = parse_recipe('')
     
     tl = tool_list.split(",")
-    return render_template('index.html', recipe_url = "has url", title = title, description = descript, ingredients = ingredients, prepTime = prepTime, cookTime = cookTime, readyTime = readyTime, tool_list = tl)
+    pm = primary_methods.split(",")
+    om = other_methods.split(",")
+    return render_template('index.html', recipe_url = "has url", title = title, description = descript, ingredients = ingredients, prepTime = prepTime, cookTime = cookTime, readyTime = readyTime, tool_list = tl, primary_methods = pm, other_methods = om, steps = processedSteps)
 
 @app.route("/<recipe_url>")
 def p_recipe(recipe_url):
@@ -21,4 +23,5 @@ def p_recipe(recipe_url):
 
 
 if __name__ == "__main__":
+
     app.run()

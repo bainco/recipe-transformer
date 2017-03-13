@@ -28,15 +28,7 @@
           </tr>
         </table>
         <table>
-          <tr>
-            <td>
-              <div class="ingHeader">
-                Timing
-              </div>
-              Ready In: {{readyTime}}, (Preparation Time: {{prepTime}}, Cooking Time: {{cookTime}})
-            </td>
-          </tr>
-          <tr>
+          <tr VALIGN=TOP>
             <td>
               <div class="ingredientsContainer">
                 <div class="ingHeader">
@@ -66,15 +58,74 @@
               </div>
             </td>
             <td>
+              <div class="ingredientsContainer">
+              <div class="ingHeader">
+                Other
+              </div>
               <div class="toolsContainer">
                 <div class="toolsHeader">
-                  Tools
+                  Timing
+                </div>
+                Ready In: {{readyTime}}, (Preparation Time: {{prepTime}}, Cooking Time: {{cookTime}})
+              </div>
+              <div class="toolsContainer">
+                <div class="toolsHeader">
+                    Tools
                 </div>
                 <ul>
                   {% for tool in tool_list %}
                     <li>{{ tool }}</li>
                   {% endfor %}
                 </ul>
+              </div>
+              <div class="toolsContainer">
+                <div class="toolsHeader">
+                  Primary Methods
+                </div>
+                <ul>
+                  {% for tool in primary_methods %}
+                    <li>{{ tool }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+              <div class="toolsContainer">
+                <div class="toolsHeader">
+                  Other Methods
+                </div>
+                <ul>
+                  {% for tool in other_methods %}
+                    <li>{{ tool }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+        <table>
+          <tr>
+            <td>
+              <div class="stepsContainer">
+                <div class="ingHeader">
+                  Directions
+                </div>
+                {% for s in steps %}
+                  <div class="singleDirCont">
+                    {{ s.text }}
+                    <div class="ingDescriptor">
+                      Ingedients: {{ s.ingredients }}
+                    </div>
+                    <div class="ingDescriptor">
+                      Time: {{ s.time }}
+                    </div>
+                    <div class="ingDescriptor">
+                      Tools: {{ s.tools }}
+                    </div>
+                    <div class="ingDescriptor">
+                      Cooking Methods(s): {{ s.method }}
+                    </div>
+                  </div>
+                {% endfor %}
               </div>
             </td>
           </tr>

@@ -54,11 +54,6 @@ body{
   text-align: center;
 }
 
-tr{
-  /* width: 1000px; */
-  /* padding-left: 100px */
-}
-
 .contentContainer{
   /* width: 1200px; */
   background-color: #e7e7e7;
@@ -66,10 +61,15 @@ tr{
 
 .ingContentCont{
   width: 520px;
+  margin-right: 10px;
 }
 
 .ingredientsContainer{
   width:520px;
+}
+
+.stepsContainer{
+  width:1050px;
 }
 
 .ingHeader{
@@ -100,17 +100,31 @@ tr{
   margin-left: 20px;
 }
 
+
+.singleDirCont{
+  background-color: #ffffff;
+  width: 1000px;
+  height: 100px;
+  margin-top: 5px;
+  margin-left: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+}
+
 .toolsContainer{
   width : 400px;
   margin-left: 25px;
   margin-top: 10px;
   background-color: #ffffff;
+  padding-bottom: 10px;
 }
 
 .toolsHeader{
   color: #f37e21;
   font-size: 18px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  padding-left: 5px;
 }
 
 
