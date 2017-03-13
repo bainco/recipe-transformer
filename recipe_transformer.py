@@ -95,7 +95,10 @@ def parse_recipe(recipeURL):
             #CALL THE VEGGY TRANSFORM FUNCTIOn
         elif transform_str == '2':
             print "Switching " + title + " to a healthier version."
-            #CALL HEALTHY TRANSFORM FUNCTION
+            (ingredients, processedSteps) = healthy_transform(ingredients, processedSteps)
+            print "Directions"
+            for pstep in processedSteps:
+                print str(pstep)
         elif transform_str == '3':
             print "Changing the scale of " + title
         elif transform_str == 'Done':
