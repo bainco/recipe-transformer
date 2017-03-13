@@ -4,6 +4,7 @@ import requests
 from step import *
 from ingredients import *
 from fractions import Fraction
+from healthy_transform import *
 
 
 def parse_recipe(recipeURL):
@@ -95,7 +96,7 @@ def parse_recipe(recipeURL):
             #CALL THE VEGGY TRANSFORM FUNCTIOn
         elif transform_str == '2':
             print "Switching " + title + " to a healthier version."
-            (ingredients, processedSteps) = healthy_transform(ingredients, processedSteps)
+            (ingredients, processedSteps) = transform_healthy(ingredients, processedSteps, primary_methods)
             print "Directions"
             for pstep in processedSteps:
                 print str(pstep)
