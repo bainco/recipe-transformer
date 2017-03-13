@@ -61,6 +61,11 @@ def transform_healthy(old_ingredients, old_directions, primary_methods):
             directions = updateDirections(directions, ingredients[i]['name'], "skim milk", True)
             ingredients[i]['name'] = 'skim milk'
 
+        # Replace sausage with turkey sausage
+        if "sausage" in ingredients[i]['name']:
+            directions = updateDirections(directions, ingredients[i]['name'], "turkey sausage", True)
+            ingredients[i]['name'] = 'turkey sausage'
+
         # trim fat from meats
         if any(ck in ingredients[i]['name'] for ck in MEATS):
             ingredients[i]['name'] += " (with fat trimmed)"
