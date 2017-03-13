@@ -65,7 +65,7 @@ def healhty_transform(ingredients, directions):
         if ('chicken' in ingredients[i]['name']) and ('skinless' not in ingredients[i]['name']):
             ingredients[i]['name'] += " (skinless)"
 
-    return ingredients
+    return (ingredients, directions)
 
 def updateDirections(directions, old_ingredient, new_ingredient, remove):
     for i in range(len(directions)):
